@@ -11,7 +11,10 @@ import Foundation
 extension Struct {
   func addingInternalProperties(forBundleIdentifier bundleIdentifier: String, hostingBundle: String? = nil) -> Struct {
     let hostingBundleValue: String
-    if let bundleName = hostingBundle, !bundleName.isEmpty {
+    // This case is extended by the fork cookpad/R.swift to support SPM
+    if let bundleName = hostingBundle, bundleName == "Bundle.module" {
+      hostingBundleValue = "Bundle.module"
+    } else if let bundleName = hostingBundle, !bundleName.isEmpty {
       hostingBundleValue = "Bundle(for: R.Class.self).path(forResource: \"\(bundleName)\", ofType: \"bundle\").flatMap(Bundle.init(path:)) ?? Bundle(for: R.Class.self)"
     } else {
       hostingBundleValue = "Bundle(for: R.Class.self)"
